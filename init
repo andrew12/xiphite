@@ -1,0 +1,34 @@
+#!/bin/sh
+
+function MAKEDIR {
+  if [ ! -d "$1" ]; then
+    mkdir $1
+  fi
+}
+
+function RMVFILE {
+  if [ -f "$1" ]; then
+    rm -rf $1
+  fi
+}
+
+# ------------
+
+if [[ $1 == "build" ]]; then
+  MAKEDIR "bin"
+
+  FLIST=$(find $PWD/scripts/*.c -printf %f, | tr "," " " | sed 's/[^ ]* */scripts\/&/g')
+  FLIST=${FLIST::-1}
+
+  echo "scripts: $FLIST"
+  echo "gcc -o bin/xiphite xiphite.c $FLIST"
+  
+  gcc -o bin/xiphite xiphite.c $FLIST
+  
+  echo "done"
+  
+fi
+
+if [[ $1 == "run" ]]; then
+  bin/xiphite
+fi
